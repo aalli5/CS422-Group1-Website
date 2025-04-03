@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slang Dictionary - Word Detail</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .word-title {
+        font-size: 2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+
+      .age-group {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        vertical-align: middle;
+        margin-left: 10px;
+      }
+
+      .word-definition {
+        font-size: 1.2em;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .accuracy-container {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 0.9em;
+      }
+
+      .accuracy-icon {
+        width: 16px;
+        height: 16px;
+        background-color: #007bff;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .accuracy-percentage {
+        color: #333;
+      }
+
+      .rating-comment-section {
+        margin-top: 30px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+      }
+
+      .rating-title,
+      .comment-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .rating-label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1em;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .rating-checkboxes {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .rating-checkboxes input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .rating-checkboxes input[type="checkbox"]:checked {
+        background-color: #007bff;
+      }
+
+      .comment-box {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        outline: none;
+      }
+
+      .submit-comment-btn {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .submit-comment-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .sample-comments {
+        margin-top: 30px;
+      }
+
+      .sample-comment {
+        background-color: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .comment-text {
+        font-size: 1em;
+        color: #666;
+        margin-bottom: 15px;
+      }
+
+      .comment-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .comment-actions button {
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9em;
+      }
+
+      .comment-actions button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Word and Age Group Tag -->
+      <div>
+        <span class="word-title">Fire</span>
+        <span class="age-group">Teen</span>
+      </div>
+
+      <!-- Word Definition -->
+      <div class="word-definition">
+        <p>Something that's great or awesome</p>
+      </div>
+
+      <!-- Accuracy Section -->
+      <div class="accuracy-container">
+        <div class="accuracy-icon"></div>
+        <span class="accuracy-percentage">Accuracy: 85%</span>
+      </div>
+
+      <!-- Combined Rating and Comment Section -->
+      <div class="rating-comment-section">
+        <div class="rating-title">Rate This Definition:</div>
+
+        <div class="rating-label">
+          Did this definition help you understand your kids in conversation?
+          <div class="rating-checkboxes">
+            <input type="checkbox" id="rating1" />
+            <label for="rating1">Yes</label>
+            <input type="checkbox" id="rating2" />
+            <label for="rating2">No</label>
+          </div>
+        </div>
+
+        <div class="rating-label">
+          Were you able to use this slang term in conversation?
+          <div class="rating-checkboxes">
+            <input type="checkbox" id="rating3" />
+            <label for="rating3">Yes</label>
+            <input type="checkbox" id="rating4" />
+            <label for="rating4">No</label>
+          </div>
+        </div>
+
+        <div class="rating-label">
+          Is the age group tag correct for this slang term?
+          <div class="rating-checkboxes">
+            <input type="checkbox" id="rating5" />
+            <label for="rating5">Yes</label>
+            <input type="checkbox" id="rating6" />
+            <label for="rating6">No</label>
+          </div>
+        </div>
+
+        <div class="comment-title">Leave a Comment:</div>
+        <textarea class="comment-box" placeholder="Write your comment here..."></textarea>
+        <button class="submit-comment-btn">Submit Comment</button>
+      </div>
+
+      <!-- Sample Comments -->
+      <div class="sample-comments">
+        <div class="sample-comment">
+          <div class="comment-text">
+            This term was super helpful! I can finally understand what my teenager means when they say "Fire."
+          </div>
+          <div class="comment-actions">
+            <button>👍 Upvote</button>
+            <button>👎 Downvote</button>
+          </div>
+        </div>
+
+        <div class="sample-comment">
+          <div class="comment-text">
+            I never knew "Fire" meant something positive! Thanks for the definition, I’ll be using it now.
+          </div>
+          <div class="comment-actions">
+            <button>👍 Upvote</button>
+            <button>👎 Downvote</button>
+          </div>
+        </div>
+
+        <div class="sample-comment">
+          <div class="comment-text">
+            Good explanation. However, it would be great to get more examples of how it’s used in sentences.
+          </div>
+          <div class="comment-actions">
+            <button>👍 Upvote</button>
+            <button>👎 Downvote</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
