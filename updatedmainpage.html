@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slang Dictionary</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .title {
+        color: black;
+        text-align: left;
+        margin-left: 20px;
+        font-weight: bold;
+      }
+
+      .search-container {
+        position: relative;
+        text-align: center;
+        margin: 40px 0;
+      }
+
+      #search-bar {
+        width: 60%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #888;
+        border-radius: 25px;
+        outline: none;
+      }
+
+      /* Suggestion dropdown */
+      #suggestions {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        max-width: 400px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        z-index: 1000;
+      }
+
+      #suggestions li {
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      #suggestions li:hover {
+        background-color: #f0f0f0;
+      }
+
+      .section-label {
+        text-align: center;
+        color: #333;
+        margin: 40px 0 20px 0;
+      }
+
+      .popular-words {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+        list-style: none;
+        padding: 10px 0;
+        overflow-x: auto;
+        margin-bottom: 40px;
+      }
+
+      .popular-words li {
+        background-color: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        min-width: 200px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .popular-words .word-title {
+        font-weight: bold;
+        color: #333;
+        font-size: 1.1em;
+      }
+
+      .popular-words .word-meaning {
+        color: #666;
+        font-size: 0.9em;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .popular-words .age-group {
+        background-color: #007bff;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 0.75em;
+        align-self: flex-start;
+      }
+
+      .popular-words .word-stats {
+        display: flex;
+        gap: 15px;
+        color: #666;
+        font-size: 0.85em;
+        margin-top: auto;
+      }
+
+      .categories-row {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .category-btn {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .category-btn:hover {
+        background-color: #0056b3;
+      }
+
+      /* Active state for category buttons */
+      .category-btn.active {
+        background-color: #0056b3;
+      }
+
+      .words-list {
+        margin: 40px auto;
+        width: 90%;
+      }
+
+      .word-item {
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .word-info {
+        flex-grow: 1;
+      }
+
+      .word-stats {
+        display: flex;
+        gap: 20px;
+        color: #666;
+      }
+
+      .word-title {
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .word-meaning {
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .age-group {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Slang Dictionary</h1>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search for words..." autocomplete="off" />
+        <ul id="suggestions"></ul>
+      </div>
+
+      <!-- Popular Words -->
+      <h2 class="section-label">Popular Slangs!</h2>
+      <ul class="popular-words">
+        <li>
+          <div class="word-title">Fire</div>
+          <div class="word-meaning">Something that's great or awesome</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 1.2k</div>
+            <div>💬 345</div>
+          </div>
+        </li>
+        <li>
+          <div class="word-title">Snaking</div>
+          <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 980</div>
+            <div>💬 267</div>
+          </div>
+        </li>
+        <li>
+          <div class="word-title">Tuff</div>
+          <div class="word-meaning">Similar to Fire</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 1.5k</div>
+            <div>💬 421</div>
+          </div>
+        </li>
+        <li>
+          <div class="word-title">Drip</div>
+          <div class="word-meaning">Clothes that look nice on you</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 890</div>
+            <div>💬 198</div>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Category Buttons -->
+      <h2 class="section-label">Browse by Specific Age Group</h2>
+      <div class="categories-row">
+        <button class="category-btn">Kids</button>
+        <button class="category-btn">Teens</button>
+        <button class="category-btn">Young Adults</button>
+        <button class="category-btn">Adults</button>
+        <button class="category-btn">Seniors</button>
+      </div>
+
+      <!-- List View -->
+      <div class="words-list">
+        <div class="word-item">
+          <div class="word-info">
+            <div class="word-title">Snaking</div>
+            <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 1.2k upvotes</div>
+            <div>💬 345 comments</div>
+          </div>
+        </div>
+
+        <div class="word-item">
+          <div class="word-info">
+            <div class="word-title">Tuff</div>
+            <div class="word-meaning">Similar to Fire</div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 980 upvotes</div>
+            <div>💬 267 comments</div>
+          </div>
+        </div>
+
+        <div class="word-item">
+          <div class="word-info">
+            <div class="word-title">Drip</div>
+            <div class="word-meaning">Clothes that look nice on you</div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 1.5k upvotes</div>
+            <div>💬 421 comments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggest Link -->
+      <p style="text-align: center; font-size: 0.85em; color: #666; margin-top: 60px;">
+        Don't see your word? <a href="suggestpage.html" style="color: #007bff; text-decoration: none;">Suggest it here.</a>
+      </p>
+    </div>
+
+    <script>
+      // Slang list for suggestions
+      const slangWords = ["lit", "tuff"];
+      const searchBar = document.getElementById("search-bar");
+      const suggestions = document.getElementById("suggestions");
+
+      searchBar.addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        suggestions.innerHTML = "";
+        if (!query) { 
+          suggestions.style.display = "none";
+          return;
+        }
+        const matches = slangWords.filter(w => w.toLowerCase().startsWith(query));
+        if (matches.length) {
+          matches.forEach(function(match) {
+            const li = document.createElement("li");
+            li.textContent = match;
+            li.addEventListener("click", function() {
+              searchBar.value = match;
+              suggestions.style.display = "none";
+            });
+            suggestions.appendChild(li);
+          });
+          suggestions.style.display = "block";
+        } else {
+          const li = document.createElement("li");
+          li.textContent = "No results";
+          li.style.color = "#666";
+          suggestions.appendChild(li);
+          suggestions.style.display = "block";
+        }
+      });
+
+      document.addEventListener("click", function(e) {
+        if (e.target !== searchBar) {
+          suggestions.style.display = "none";
+        }
+      });
+
+      // Active state for category buttons
+      const categoryButtons = document.querySelectorAll(".category-btn");
+      categoryButtons.forEach(btn => btn.addEventListener("click", function() {
+        categoryButtons.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+      }));
+    </script>
+  </body>
+</html>
