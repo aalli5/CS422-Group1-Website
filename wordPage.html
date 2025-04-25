@@ -112,8 +112,6 @@
         display: flex;
         align-items: center;
         gap: 15px;
-        flex-direction: row;
-        justify-content: end;
       }
 
       .rating-checkboxes input[type="checkbox"] {
@@ -244,20 +242,86 @@
         font-size: 24px;
       }
 
-      .rating-checkboxes {
-        display: flex;
-        justify-content: right;
-        gap: 5px;
-      }
-
       .rating-checkboxes input[type="checkbox"]:not(:first-child) {
         margin-left: 10px;
       }
 
-      /* Adjusting checkbox placement */
-      .rating-checkboxes input[type="checkbox"] {
-        margin-right: 0; 
+      .vote-button {
+        padding: 5px 12px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.2s;
       }
+
+      .vote-button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+      }
+
+      /* Selected (checked) style */
+      .vote-radio:checked + .vote-button {
+        background-color: #004080; /* darker blue when selected */
+      }
+
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      .accuracy-icon {
+        width: 20px;
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 50%;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: help;
+      }
+
+      /* Tooltip text */
+      .tooltip-text {
+        visibility: hidden;
+        background-color: #333;
+        color: #fff;
+        font-size: 0.8em;
+        text-align: left;
+        border-radius: 5px;
+        padding: 8px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* Adjust this as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 250px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%; /* At the bottom of tooltip */
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+      }
+
+      /* Show the tooltip on hover */
+      .tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+
     </style>
   </head>
   <body>
@@ -288,8 +352,15 @@
 
       <!-- Accuracy Section -->
       <div class="accuracy-container">
-        <div class="accuracy-icon"></div>
-        <span class="accuracy-percentage">Definition Accuracy: 85%</span>
+        <div class="accuracy-container">
+          <div class="tooltip-container">
+            <div class="accuracy-icon">?</div>
+            <div class="tooltip-text">
+              Accuracy is calculated as an average of the 3 rating questions seen below.
+            </div>
+          </div>
+          <span class="accuracy-percentage">Definition Accuracy: 85%</span>
+        </div>
       </div>
 
       <!-- Rating and Comment Section -->
@@ -300,10 +371,10 @@
         <div class="rating-label">
           Did this definition help you understand your kids in conversation?
           <div class="rating-checkboxes">
-            <input type="checkbox" id="rating1" />
-            <label for="rating1">Yes</label>
-            <input type="checkbox" id="rating2" />
-            <label for="rating2">No</label>
+            <input type="radio" id="rating1-yes" name="understand" />
+            <label for="rating1-yes">Yes</label>
+            <input type="radio" id="rating1-no" name="understand" />
+            <label for="rating1-no">No</label>
           </div>
           <div class="rating-accuracy">
             <div class="accuracy-icon"></div>
@@ -315,10 +386,10 @@
         <div class="rating-label">
           Were you able to use this slang term in conversation? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           <div class="rating-checkboxes">
-            <input type="checkbox" id="rating3" />
-            <label for="rating3">Yes</label>
-            <input type="checkbox" id="rating4" />
-            <label for="rating4">No</label>
+            <input type="radio" id="rating2-yes" name="used" />
+            <label for="rating2-yes">Yes</label>
+            <input type="radio" id="rating2-no" name="used" />
+            <label for="rating2-no">No</label>
           </div>
           <div class="rating-accuracy">
             <div class="accuracy-icon"></div>
@@ -330,10 +401,10 @@
         <div class="rating-label">
           Is the age group tag correct for this slang term? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           <div class="rating-checkboxes">
-            <input type="checkbox" id="rating5" />
-            <label for="rating5">Yes</label>
-            <input type="checkbox" id="rating6" />
-            <label for="rating6">No</label>
+            <input type="radio" id="rating3-yes" name="agegroup" />
+            <label for="rating3-yes">Yes</label>
+            <input type="radio" id="rating3-no" name="agegroup" />
+            <label for="rating3-no">No</label>
           </div>
           <div class="rating-accuracy">
             <div class="accuracy-icon"></div>
@@ -356,8 +427,11 @@
             This term was super helpful! I can finally understand what my teenager means when they say "Fire."
           </div>
           <div class="comment-actions">
-            <button>👍 </button>
-            <button>👎 </button>
+            <input type="radio" name="vote1" id="vote1-up" class="vote-radio" hidden />
+            <label for="vote1-up" class="vote-button">👍</label>
+          
+            <input type="radio" name="vote1" id="vote1-down" class="vote-radio" hidden />
+            <label for="vote1-down" class="vote-button">👎</label>
           </div>
         </div>
 
@@ -366,8 +440,11 @@
             I never knew "Fire" meant something positive! Thanks for the definition, I’ll be using it now.
           </div>
           <div class="comment-actions">
-            <button>👍 </button>
-            <button>👎 </button>
+            <input type="radio" name="vote2" id="vote2-up" class="vote-radio" hidden />
+            <label for="vote2-up" class="vote-button">👍</label>
+          
+            <input type="radio" name="vote2" id="vote2-down" class="vote-radio" hidden />
+            <label for="vote2-down" class="vote-button">👎</label>
           </div>
         </div>
 
@@ -376,8 +453,11 @@
             Good explanation. However, it would be great to get more examples of how it’s used in sentences.
           </div>
           <div class="comment-actions">
-            <button>👍 </button>
-            <button>👎 </button>
+            <input type="radio" name="vote3" id="vote3-up" class="vote-radio" hidden />
+            <label for="vote3-up" class="vote-button">👍</label>
+          
+            <input type="radio" name="vote3" id="vote3-down" class="vote-radio" hidden />
+            <label for="vote3-down" class="vote-button">👎</label>
           </div>
         </div>
       </div>
