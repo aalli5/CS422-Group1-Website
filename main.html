@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Slang Dictionary</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .title {
+      color: black;
+      text-align: left;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+    .search-container {
+      text-align: center;
+      margin: 40px 0;
+    }
+    #search-bar {
+      width: 60%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+    }
+    .section-label {
+      text-align: center;
+      color: #333;
+      margin: 40px 0 20px;
+    }
+    .popular-words {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      list-style: none;
+      padding: 10px 0;
+      overflow-x: auto;
+      margin-bottom: 40px;
+    }
+    .popular-words li {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .popular-words .word-title {
+      font-weight: bold;
+      color: #333;
+      font-size: 1.1em;
+    }
+    .popular-words .word-meaning {
+      color: #666;
+      font-size: 0.9em;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .popular-words .age-group {
+      background-color: #007bff;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 0.75em;
+      align-self: flex-start;
+    }
+    .popular-words .word-stats {
+      display: flex;
+      gap: 15px;
+      color: #666;
+      font-size: 0.85em;
+      margin-top: auto;
+    }
+    .categories-row {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .category-btn {
+      padding: 12px 25px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .category-btn:hover {
+      background-color: #0056b3;
+    }
+    /* Loading state for age-group buttons */
+    .category-btn.loading {
+    opacity: 0.6;
+    cursor: wait;
+    }
+
+    .words-list {
+      margin: 40px auto;
+      width: 90%;
+    }
+    .word-item {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .word-info {
+      flex-grow: 1;
+    }
+    .word-stats {
+      display: flex;
+      gap: 20px;
+      color: #666;
+    }
+    .word-title {
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    .word-meaning {
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .age-group {
+      background-color: #007bff;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.8em;
+    }
+
+    /* Word Detail Page Styles */
+    #word-detail-page {
+      padding: 5px;
+    }
+    .page-back-button {
+      
+      top: 10px;
+      left: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 30px;
+      border: none;
+    }
+    .page-back-button:hover {
+      background-color: #0056b3;
+    }
+    .detail-word-title {
+      font-size: 5em;
+      font-weight: bold;
+      color: black;
+      margin-bottom: 1px;
+    }
+    .detail-age-group {
+      background-color: #007bff;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+    .word-definition {
+      font-size: 2.5em;
+      color: #007bff;
+      font-weight: bold;
+      margin-bottom: 1px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .accuracy-container {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      font-size: 0.9em;
+    }
+    .accuracy-icon {
+      width: 16px;
+      height: 16px;
+      background-color: #007bff;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .rating-comment-section {
+      margin-top: 30px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+    }
+    .rating-title, .comment-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .rating-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.2em;
+      color: #212121;
+      margin-bottom: 15px;
+    }
+    .rating-checkboxes {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .rating-checkboxes input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .rating-checkboxes input[type="checkbox"]:checked {
+      background-color: #007bff;
+    }
+    .rating-accuracy {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .comment-box {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      outline: none;
+      border: 2px solid black;
+    }
+    .submit-comment-btn {
+      padding: 12px 25px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .submit-comment-btn:hover {
+      background-color: #0056b3;
+    }
+    /* Disabled styling for submit buttons */
+    .submit-comment-btn:disabled,
+    #suggest-submit:disabled {
+    opacity: 0.6;
+    background-color: #a0c0e5;
+    cursor: not-allowed;
+    }
+
+    .comments-header {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    .sample-comments {
+      margin-top: 30px;
+    }
+    .sample-comment {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .comment-text {
+      font-size: 1.2em;
+      color: black;
+      margin-bottom: 15px;
+    }
+    .comment-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .comment-actions button {
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    .comment-actions button:hover {
+      background-color: #0056b3;
+    }
+    .alternative-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    .alternative-button {
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .alternative-button:disabled {
+      background-color: #a0c0e5;
+      cursor: not-allowed;
+    }
+    .icon {
+      font-size: 24px;
+    }
+
+    /* Suggest Page Styles */
+    #suggest-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    #suggest-page h1 {
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .input-box {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .input-box label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .input-box input, .input-box textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .input-box textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    #suggest-page button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: block;
+  margin: 0 auto;
+}
+
+    #suggest-page button:hover {
+      background-color: #0056b3;
+    }
+    
+    /* Utility for Page Navigation */
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Home Page -->
+  <div id="home-page" class="page active">
+    <div class="container">
+      <h1 class="title">Slang Dictionary</h1>
+      <!-- Search Bar -->
+<div class="search-container">
+  <input type="text" id="search-bar" placeholder="Search for words..." />
+  <!-- Updated Search Button using the .category-btn style -->
+  <button class="category-btn" onclick="showPage('search-results-page')">Search</button>
+</div>
+
+      <!-- Popular Slangs -->
+      <h2 class="section-label">Popular Slangs!</h2>
+      <ul class="popular-words">
+        <li onclick="showDetail('Fire')">
+          <div class="word-title">Fire</div>
+          <div class="word-meaning">Something that's great or awesome</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 1.2k</div>
+            <div>💬 345</div>
+          </div>
+        </li>
+        <li onclick="showDetail('Snaking')">
+          <div class="word-title">Snaking</div>
+          <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 980</div>
+            <div>💬 267</div>
+          </div>
+        </li>
+        <li onclick="showDetail('Tuff')">
+          <div class="word-title">Tuff</div>
+          <div class="word-meaning">Similar to Fire</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 1.5k</div>
+            <div>💬 421</div>
+          </div>
+        </li>
+        <li onclick="showDetail('Drip')">
+          <div class="word-title">Drip</div>
+          <div class="word-meaning">Clothes that look nice on you</div>
+          <span class="age-group">Teens</span>
+          <div class="word-stats">
+            <div>↑ 890</div>
+            <div>💬 198</div>
+          </div>
+        </li>
+      </ul>
+      <!-- Category Buttons -->
+<h2 class="section-label">Browse by Specific Age Group</h2>
+<div class="categories-row">
+  <button class="category-btn" id="filter-kids">Kids</button>
+  <button class="category-btn" id="filter-teens">Teens</button>
+  <button class="category-btn" id="filter-young-adults">Young Adults</button>
+  <button class="category-btn" id="filter-adults">Adults</button>
+  <button class="category-btn" id="filter-seniors">Seniors</button>
+</div>
+
+
+      <!-- Kids Slang Words Section -->
+<h2 class="section-label">Kids Slang Words</h2>
+<div class="words-list">
+  <div class="word-item" onclick="showDetail('Booyah')">
+    <div class="word-info">
+      <div class="word-title">Booyah</div>
+      <div class="word-meaning">Exclamation used to express excitement or triumph</div>
+      <span class="age-group">Kids</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 300 upvotes</div>
+      <div>💬 45 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('Zoomies')">
+    <div class="word-info">
+      <div class="word-title">Zoomies</div>
+      <div class="word-meaning">A burst of energy when kids (or pets) run around excitedly</div>
+      <span class="age-group">Kids</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 210 upvotes</div>
+      <div>💬 32 comments</div>
+    </div>
+  </div>
+</div>
+
+<!-- Teens Slang Words Section -->
+<h2 class="section-label">Teens Slang Words</h2>
+<div class="words-list">
+  <div class="word-item" onclick="showDetail('Snaking')">
+    <div class="word-info">
+      <div class="word-title">Snaking</div>
+      <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+      <span class="age-group">Teens</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 1.2k upvotes</div>
+      <div>💬 345 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('Sussy')">
+    <div class="word-info">
+      <div class="word-title">Sussy</div>
+      <div class="word-meaning">Suspicious or shady behavior</div>
+      <span class="age-group">Teens</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 640 upvotes</div>
+      <div>💬 120 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('No Cap')">
+    <div class="word-info">
+      <div class="word-title">No Cap</div>
+      <div class="word-meaning">No lie or for real</div>
+      <span class="age-group">Teens</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 1.1k upvotes</div>
+      <div>💬 300 comments</div>
+    </div>
+  </div>
+</div>
+
+<!-- Young Adults Slang Words Section -->
+<h2 class="section-label">Young Adults Slang Words</h2>
+<div class="words-list">
+  <div class="word-item" onclick="showDetail('Adulting')">
+    <div class="word-info">
+      <div class="word-title">Adulting</div>
+      <div class="word-meaning">Taking on grown-up responsibilities like paying bills or doing chores</div>
+      <span class="age-group">Young Adults</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 700 upvotes</div>
+      <div>💬 210 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('FOMO')">
+    <div class="word-info">
+      <div class="word-title">FOMO</div>
+      <div class="word-meaning">Fear Of Missing Out—anxiety over missing social events</div>
+      <span class="age-group">Young Adults</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 920 upvotes</div>
+      <div>💬 150 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('Bougie')">
+    <div class="word-info">
+      <div class="word-title">Bougie</div>
+      <div class="word-meaning">Fancy or high-class, sometimes pretentious</div>
+      <span class="age-group">Young Adults</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 650 upvotes</div>
+      <div>💬 95 comments</div>
+    </div>
+  </div>
+</div>
+
+<!-- Adults Slang Words Section -->
+<h2 class="section-label">Adults Slang Words</h2>
+<div class="words-list">
+  <div class="word-item" onclick="showDetail('9-to-5')">
+    <div class="word-info">
+      <div class="word-title">9-to-5</div>
+      <div class="word-meaning">Refers to a typical full-time work schedule</div>
+      <span class="age-group">Adults</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 300 upvotes</div>
+      <div>💬 25 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('DINK')">
+    <div class="word-info">
+      <div class="word-title">DINK</div>
+      <div class="word-meaning">Double Income, No Kids—describes a couple with two incomes and no children</div>
+      <span class="age-group">Adults</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 150 upvotes</div>
+      <div>💬 10 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('Commute')">
+    <div class="word-info">
+      <div class="word-title">Commute</div>
+      <div class="word-meaning">Daily travel to and from work, sometimes implying a routine</div>
+      <span class="age-group">Adults</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 230 upvotes</div>
+      <div>💬 18 comments</div>
+    </div>
+  </div>
+</div>
+
+<!-- Seniors Slang Words Section -->
+<h2 class="section-label">Seniors Slang Words</h2>
+<div class="words-list">
+  <div class="word-item" onclick="showDetail('Golden Years')">
+    <div class="word-info">
+      <div class="word-title">Golden Years</div>
+      <div class="word-meaning">A casual term referring to retirement or later life</div>
+      <span class="age-group">Seniors</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 120 upvotes</div>
+      <div>💬 15 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('Silver Surfer')">
+    <div class="word-info">
+      <div class="word-title">Silver Surfer</div>
+      <div class="word-meaning">A term for a senior who is tech-savvy or active online</div>
+      <span class="age-group">Seniors</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 80 upvotes</div>
+      <div>💬 5 comments</div>
+    </div>
+  </div>
+  <div class="word-item" onclick="showDetail('Seasoned')">
+    <div class="word-info">
+      <div class="word-title">Seasoned</div>
+      <div class="word-meaning">Polite slang for someone who is experienced or older</div>
+      <span class="age-group">Seniors</span>
+    </div>
+    <div class="word-stats">
+      <div>↑ 60 upvotes</div>
+      <div>💬 3 comments</div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Words List -->
+      <div class="words-list">
+        <div class="word-item" onclick="showDetail('Snaking')">
+          <div class="word-info">
+            <div class="word-title">Snaking</div>
+            <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 1.2k upvotes</div>
+            <div>💬 345 comments</div>
+          </div>
+        </div>
+        <div class="word-item" onclick="showDetail('Tuff')">
+          <div class="word-info">
+            <div class="word-title">Tuff</div>
+            <div class="word-meaning">Similar to Fire</div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 980 upvotes</div>
+            <div>💬 267 comments</div>
+          </div>
+        </div>
+        <div class="word-item" onclick="showDetail('Drip')">
+          <div class="word-info">
+            <div class="word-title">Drip</div>
+            <div class="word-meaning">Clothes that look nice on you</div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 1.5k upvotes</div>
+            <div>💬 421 comments</div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align: center; margin: 20px 0;">
+        Don’t see your word?
+        <a
+          href="#"
+          style="color: #007bff; text-decoration: none;"
+          onclick="showPage('suggest-page')"
+        >
+          Word Suggestion Form
+        </a>
+      </p>
+      
+    </div>
+  </div>
+
+  <!-- Word Detail Page -->
+  <div id="word-detail-page" class="page active">
+    <div class="container">
+      <button class="page-back-button" onclick="showPage('home-page')">&#8592;</button>
+      <!-- Alternative Definitions and Add Alternative Definition Buttons -->
+      <div class="alternative-buttons">
+        <button class="alternative-button" disabled>
+          <span class="icon">☰</span> Alternative Definitions
+        </button>
+        <button class="alternative-button">
+          <span class="icon">+</span> Add Alternative Definition
+        </button>
+      </div>
+      <!-- Word and Age Group Tag -->
+      <div>
+        <span class="detail-word-title" id="detail-word-title">Fire</span>
+        <span class="detail-age-group">Teen</span>
+      </div>
+      <!-- Word Definition -->
+      <div class="word-definition">
+        <p id="detail-word-definition">Something that is great or awesome</p>
+      </div>
+      <!-- Accuracy Section -->
+      <div class="accuracy-container">
+        <div class="accuracy-icon"></div>
+        <span class="accuracy-percentage">Definition Accuracy: 85%</span>
+      </div>
+      <!-- Rating and Comment Section -->
+      <div class="rating-comment-section">
+        <div class="rating-title">Rate This Definition:</div>
+        <!-- First Rating Question -->
+        <div class="rating-label">
+          Did this definition help you understand your kids in conversation?
+          <div class="rating-checkboxes">
+            <input type="checkbox" id="rating1" />
+            <label for="rating1">Yes</label>
+            <input type="checkbox" id="rating2" />
+            <label for="rating2">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span>90% Say Yes</span>
+          </div>
+        </div>
+        <!-- Second Rating Question -->
+        <div class="rating-label">
+          Were you able to use this slang term in conversation?
+          <div class="rating-checkboxes">
+            <input type="checkbox" id="rating3" />
+            <label for="rating3">Yes</label>
+            <input type="checkbox" id="rating4" />
+            <label for="rating4">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span>85% Say Yes</span>
+          </div>
+        </div>
+        <!-- Third Rating Question -->
+        <div class="rating-label">
+          Is the age group tag correct for this slang term?
+          <div class="rating-checkboxes">
+            <input type="checkbox" id="rating5" />
+            <label for="rating5">Yes</label>
+            <input type="checkbox" id="rating6" />
+            <label for="rating6">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span>80% Say Yes</span>
+          </div>
+        </div>
+        <div class="comment-title">Leave a Comment:</div>
+        <textarea class="comment-box"
+         placeholder="Write your comment here..."
+         maxlength="250"  style="resize:none;"></textarea>
+        <!-- Comment submit in detail page -->
+        <button class="submit-comment-btn"id="comment-submit" disabled>Submit Comment</button>
+
+      </div>
+      <!-- Comments Header -->
+      <div class="comments-header">Comments (3)</div>
+      <!-- Sample Comments -->
+      <div class="sample-comments">
+        <div class="sample-comment">
+          <div class="comment-text">
+            This term was super helpful! I can finally understand what my teenager means when they say "Fire."
+          </div>
+          <div class="comment-actions">
+            <button>👍</button>
+            <button>👎</button>
+          </div>
+        </div>
+        <div class="sample-comment">
+          <div class="comment-text">
+            I never knew "Fire" meant something positive! Thanks for the definition, I’ll be using it now.
+          </div>
+          <div class="comment-actions">
+            <button>👍</button>
+            <button>👎</button>
+          </div>
+        </div>
+        <div class="sample-comment">
+          <div class="comment-text">
+            Good explanation. However, it would be great to get more examples of how it’s used in sentences.
+          </div>
+          <div class="comment-actions">
+            <button>👍</button>
+            <button>👎</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   
+  
+      <!-- Search Results Page -->
+  <div id="search-results-page" class="page">
+    <div class="container">
+      <button class="page-back-button" onclick="showPage('home-page')">&#8592;</button>
+      <h1 class="title">Search Results</h1>
+      <p style="text-align: center; margin-bottom: 20px;">Showing results for "<strong>cap</strong>"</p>
+      <div id="search-results-container">
+        <!-- Dummy Search Result Item 1 -->
+        <div class="word-item" onclick="showDetail('Cap1')">
+          <div class="word-info">
+            <div class="word-title">Cap</div>
+            <div class="word-meaning">
+              Slang for a lie or falsehood. When someone says "no cap," they mean they're being honest.
+            </div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 850 upvotes</div>
+            <div>💬 110 comments</div>
+          </div>
+        </div>
+        <!-- Dummy Search Result Item 2 -->
+        <div class="word-item" onclick="showDetail('Cap2')">
+          <div class="word-info">
+            <div class="word-title">Cap</div>
+            <div class="word-meaning">
+              Used to call out exaggeration or lying; saying "That's cap" implies "That's not true."
+            </div>
+            <span class="age-group">Teens</span>
+          </div>
+          <div class="word-stats">
+            <div>↑ 640 upvotes</div>
+            <div>💬 85 comments</div>
+          </div>
+        </div>
+      </div>
+      <!-- Centered Suggest Link -->
+      <p style="text-align: center; font-size: 0.85em; color: #666; margin-top: 40px;">
+        Can't find your word? 
+        <a href="#" onclick="showPage('suggest-page')" style="color: #007bff; text-decoration: none;">
+          Word Suggestion Form
+        </a>
+      </p>
+      
+    </div>
+  </div>
+
+ <!-- Suggest Page -->
+<div id="suggest-page" class="page">
+  <div class="container">
+    <!-- ... -->
+    <div class="input-box">
+      <label for="definition">Definition:</label>
+      <textarea
+        id="definition"
+        name="definition"
+        placeholder="Enter the meaning of the word"
+        maxlength="250"
+        style="resize: none;"
+      ></textarea>
+    </div>
+    <button
+      type="submit"
+      id="suggest-submit"
+      disabled
+    >
+      Submit for Review
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+  /* Enable / disable submit buttons */
+  function toggleBtn(btn, field){
+    btn.disabled = !field.value.trim();
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const def   = document.getElementById('definition');
+    const sugBtn= document.getElementById('suggest-submit');
+    if(def){ def.addEventListener('input', () => toggleBtn(sugBtn,def)); }
+  
+    const cBox  = document.querySelector('.comment-box');
+    const cBtn  = document.getElementById('comment-submit');
+    if(cBox){ cBox.addEventListener('input', () => toggleBtn(cBtn,cBox)); }
+  });
+  </script>
+  
+
+
+
+
+
+
+
+  <script>
+    // Function to switch between pages
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(function(page) {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+  
+    // Function to show word details (static demo)
+    function showDetail(word) {
+      const detailTitle = document.getElementById('detail-word-title');
+      const detailDefinition = document.getElementById('detail-word-definition');
+      if (word === 'Fire') {
+        detailTitle.textContent = 'Fire';
+        detailDefinition.textContent = 'Something that is great or awesome';
+      } else if (word === 'Snaking') {
+        detailTitle.textContent = 'Snaking';
+        detailDefinition.textContent = 'Doing something like a plan without somebody on purpose';
+      } else if (word === 'Tuff') {
+        detailTitle.textContent = 'Tuff';
+        detailDefinition.textContent = 'Similar to Fire';
+      } else if (word === 'Drip') {
+        detailTitle.textContent = 'Drip';
+        detailDefinition.textContent = 'Clothes that look nice on you';
+      }
+      showPage('word-detail-page');
+    }
+  
+    // Helper to enable/disable a button based on field content
+    function toggleBtn(btn, field) {
+      btn.disabled = !field.value.trim();
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Spinner effect on age-group filter buttons
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.add('loading');
+          // TODO: replace with real filter logic
+          setTimeout(() => btn.classList.remove('loading'), 500);
+        });
+      });
+  
+      // 2. Enable “Submit for Review” when definition textarea has text
+      const defField = document.getElementById('definition');
+      const sugBtn   = document.getElementById('suggest-submit');
+      if (defField && sugBtn) {
+        defField.addEventListener('input', () => toggleBtn(sugBtn, defField));
+      }
+  
+      // 3. Enable “Submit Comment” when comment box has text
+      const commentBox = document.querySelector('.comment-box');
+      const comBtn     = document.getElementById('comment-submit');
+      if (commentBox && comBtn) {
+        commentBox.addEventListener('input', () => toggleBtn(comBtn, commentBox));
+      }
+    });
+  </script>
+  
+</body>
+</html>
