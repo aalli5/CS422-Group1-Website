@@ -87,6 +87,7 @@
       .popular-words li {
         background-color: white;
         padding: 15px;
+        margin-left: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         min-width: 200px;
@@ -201,6 +202,47 @@
         border-radius: 5px;
         font-size: 0.8em;
       }
+      .popular-words li {
+        position: relative;
+      }
+
+      .rank-badge {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        background: #007bff;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.1em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+
+      .rank-text {
+        color: #007bff;
+        font-size: 0.8em;
+        margin-left: 8px;
+      }
+
+      .word-title {
+        position: relative;
+        z-index: 2;
+      }
+      .no-words-message {
+        text-align: center;
+        color: #666;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
@@ -209,7 +251,12 @@
 
       <!-- Search Bar -->
       <div class="search-container">
-        <input type="text" id="search-bar" placeholder="Search for words..." autocomplete="off" />
+        <input
+          type="text"
+          id="search-bar"
+          placeholder="Search for words..."
+          autocomplete="off"
+        />
         <ul id="suggestions"></ul>
       </div>
 
@@ -217,39 +264,45 @@
       <h2 class="section-label">Popular Slangs!</h2>
       <ul class="popular-words">
         <li>
-          <div class="word-title">Fire</div>
-          <div class="word-meaning">Something that's great or awesome</div>
+          <div class="rank-badge">#1</div>
+          <div class="word-title" style="margin-left: 15px">
+            Tuff <span class="rank-text">(Most Popular)</span>
+          </div>
+          <div class="word-meaning">Used to call something cool</div>
           <span class="age-group">Teens</span>
           <div class="word-stats">
-            <div>↑ 1.2k</div>
-            <div>💬 345</div>
+            <div>↑ 1.5k upvotes</div>
+            <div>💬 421 comments</div>
           </div>
         </li>
         <li>
-          <div class="word-title">Snaking</div>
-          <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+          <div class="rank-badge">#2</div>
+          <div class="word-title" style="margin-left: 15px">Fire</div>
+          <div class="word-meaning">Something thats exciting or great</div>
           <span class="age-group">Teens</span>
           <div class="word-stats">
-            <div>↑ 980</div>
-            <div>💬 267</div>
+            <div>↑ 1.3k upvotes</div>
+            <div>💬 365 comments</div>
           </div>
         </li>
         <li>
-          <div class="word-title">Tuff</div>
-          <div class="word-meaning">Similar to Fire</div>
+          <div class="rank-badge">#3</div>
+          <div class="word-title" style="margin-left: 15px">Drip</div>
+          <div class="word-meaning">Clothes that look nice</div>
           <span class="age-group">Teens</span>
           <div class="word-stats">
-            <div>↑ 1.5k</div>
-            <div>💬 421</div>
+            <div>↑ 1.1k upvotes</div>
+            <div>💬 298 comments</div>
           </div>
         </li>
         <li>
-          <div class="word-title">Drip</div>
-          <div class="word-meaning">Clothes that look nice on you</div>
+          <div class="rank-badge">#4</div>
+          <div class="word-title" style="margin-left: 15px">Snaking</div>
+          <div class="word-meaning">Going behind someone's back</div>
           <span class="age-group">Teens</span>
           <div class="word-stats">
-            <div>↑ 890</div>
-            <div>💬 198</div>
+            <div>↑ 980 upvotes</div>
+            <div>💬 267 comments</div>
           </div>
         </li>
       </ul>
@@ -266,10 +319,10 @@
 
       <!-- List View -->
       <div class="words-list">
-        <div class="word-item">
+        <div class="word-item" data-age="teens">
           <div class="word-info">
             <div class="word-title">Snaking</div>
-            <div class="word-meaning">Doing something like a plan without somebody on purpose</div>
+            <div class="word-meaning">Going behind someone's back</div>
             <span class="age-group">Teens</span>
           </div>
           <div class="word-stats">
@@ -278,7 +331,7 @@
           </div>
         </div>
 
-        <div class="word-item">
+        <div class="word-item" data-age="teens">
           <div class="word-info">
             <div class="word-title">Tuff</div>
             <div class="word-meaning">Similar to Fire</div>
@@ -290,22 +343,34 @@
           </div>
         </div>
 
-        <div class="word-item">
+        <div class="word-item" data-age="seniors">
           <div class="word-info">
-            <div class="word-title">Drip</div>
-            <div class="word-meaning">Clothes that look nice on you</div>
-            <span class="age-group">Teens</span>
+            <div class="word-title">Whippersnapper</div>
+            <div class="word-meaning">
+              Someone thats young and overconfident
+            </div>
+            <span class="age-group">Seniors</span>
           </div>
           <div class="word-stats">
-            <div>↑ 1.5k upvotes</div>
-            <div>💬 421 comments</div>
+            <div>↑ 150 upvotes</div>
+            <div>💬 45 comments</div>
           </div>
         </div>
       </div>
 
       <!-- Suggest Link -->
-      <p style="text-align: center; font-size: 0.85em; color: #666; margin-top: 60px;">
-        Don't see your word? <a href="suggestpage.html" style="color: #007bff; text-decoration: none;">Suggest it here.</a>
+      <p
+        style="
+          text-align: center;
+          font-size: 0.85em;
+          color: #666;
+          margin-top: 60px;
+        "
+      >
+        Don't see your word?
+        <a href="suggestpage.html" style="color: #007bff; text-decoration: none"
+          >Suggest it here.</a
+        >
       </p>
     </div>
 
@@ -315,19 +380,21 @@
       const searchBar = document.getElementById("search-bar");
       const suggestions = document.getElementById("suggestions");
 
-      searchBar.addEventListener("input", function() {
+      searchBar.addEventListener("input", function () {
         const query = this.value.toLowerCase();
         suggestions.innerHTML = "";
-        if (!query) { 
+        if (!query) {
           suggestions.style.display = "none";
           return;
         }
-        const matches = slangWords.filter(w => w.toLowerCase().startsWith(query));
+        const matches = slangWords.filter((w) =>
+          w.toLowerCase().startsWith(query)
+        );
         if (matches.length) {
-          matches.forEach(function(match) {
+          matches.forEach(function (match) {
             const li = document.createElement("li");
             li.textContent = match;
-            li.addEventListener("click", function() {
+            li.addEventListener("click", function () {
               searchBar.value = match;
               suggestions.style.display = "none";
             });
@@ -343,7 +410,7 @@
         }
       });
 
-      document.addEventListener("click", function(e) {
+      document.addEventListener("click", function (e) {
         if (e.target !== searchBar) {
           suggestions.style.display = "none";
         }
@@ -351,10 +418,55 @@
 
       // Active state for category buttons
       const categoryButtons = document.querySelectorAll(".category-btn");
-      categoryButtons.forEach(btn => btn.addEventListener("click", function() {
-        categoryButtons.forEach(b => b.classList.remove("active"));
-        this.classList.add("active");
-      }));
+      categoryButtons.forEach((btn) =>
+        btn.addEventListener("click", function () {
+          categoryButtons.forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+        })
+      );
+      const ageGroups = {
+        Kids: "kids",
+        Teens: "teens",
+        "Young Adults": "young-adults",
+        Adults: "adults",
+        Seniors: "seniors",
+      };
+
+      function filterWords(ageGroup) {
+        const words = document.querySelectorAll(".word-item");
+        let hasMatches = false;
+        const wordsList = document.querySelector(".words-list");
+
+        const existingMessage = wordsList.querySelector(".no-words-message");
+        if (existingMessage) existingMessage.remove();
+
+        words.forEach((word) => {
+          if (word.dataset.age === ageGroup) {
+            word.style.display = "flex";
+            hasMatches = true;
+          } else {
+            word.style.display = "none";
+          }
+        });
+
+        if (!hasMatches) {
+          const message = document.createElement("div");
+          message.className = "no-words-message";
+          message.textContent = `No slang words found for this age group. Be the first to suggest one!`;
+          wordsList.appendChild(message);
+        }
+      }
+
+      categoryButtons.forEach((btn) =>
+        btn.addEventListener("click", function () {
+          categoryButtons.forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          const ageGroup = ageGroups[this.textContent];
+          filterWords(ageGroup);
+        })
+      );
+
+      document.querySelector(".category-btn:nth-child(2)").click();
     </script>
   </body>
 </html>
