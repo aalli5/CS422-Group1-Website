@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slang Dictionary</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .title {
+        color: black;
+        text-align: left;
+        margin-left: 20px;
+        font-weight: bold;
+      }
+
+      .search-container {
+        position: relative;
+        text-align: center;
+        margin: 40px 0;
+      }
+
+      #search-bar {
+        width: 60%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #888;
+        border-radius: 25px;
+        outline: none;
+      }
+
+      #suggestions {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        max-width: 400px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        z-index: 1000;
+      }
+
+      #suggestions li {
+        padding: 8px;
+        cursor: pointer;
+      }
+
+      #suggestions li:hover {
+        background-color: #f0f0f0;
+      }
+
+      .section-label {
+        text-align: center;
+        color: #333;
+        margin: 40px 0 20px;
+      }
+
+      .popular-words {
+        display: flex;
+        gap: 15px;
+        list-style: none;
+        padding: 10px 0;
+        overflow-x: auto;
+        margin-bottom: 40px;
+      }
+
+      .popular-words li {
+        position: relative;
+        background-color: white;
+        /* increased top padding to fully accommodate badge */
+        padding: 30px 15px 15px;
+        margin-left: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        min-width: 200px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .rank-badge {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        background: #007bff;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.1em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .popular-words .word-title {
+        font-weight: bold;
+        color: #333;
+        font-size: 1.1em;
+      }
+
+      .popular-words .word-meaning {
+        color: #666;
+        font-size: 0.9em;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .popular-words .age-group {
+        background-color: #007bff;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 0.75em;
+        align-self: flex-start;
+      }
+
+      .categories-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+
+      .category-btn {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .category-btn:hover,
+      .category-btn.active {
+        background-color: #0056b3;
+      }
+
+      .words-list {
+        margin: 40px auto;
+        width: 90%;
+      }
+
+      .word-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .word-item.clickable {
+        cursor: pointer;
+      }
+
+      .word-info {
+        flex-grow: 1;
+      }
+
+      .word-item .word-title {
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .word-item .word-meaning {
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .no-words-message {
+        text-align: center;
+        color: #666;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Slang Dictionary</h1>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-bar"
+          placeholder="Search for words..."
+          autocomplete="off"
+        />
+        <ul id="suggestions"></ul>
+      </div>
+
+      <!-- Popular Words -->
+      <h2 class="section-label">Popular Slangs!</h2>
+      <ul class="popular-words">
+        <li>
+          <div class="rank-badge">#1</div>
+          <div class="word-title">Tuff <span class="rank-text">(Most Popular)</span></div>
+          <div class="word-meaning">Used to call something cool</div>
+          <span class="age-group">Teens</span>
+        </li>
+        <li>
+          <div class="rank-badge">#2</div>
+          <div class="word-title">Fire</div>
+          <div class="word-meaning">Something that’s exciting or great</div>
+          <span class="age-group">Teens</span>
+        </li>
+        <li>
+          <div class="rank-badge">#3</div>
+          <div class="word-title">Drip</div>
+          <div class="word-meaning">Clothes that look nice</div>
+          <span class="age-group">Teens</span>
+        </li>
+        <li>
+          <div class="rank-badge">#4</div>
+          <div class="word-title">Snaking</div>
+          <div class="word-meaning">Going behind someone’s back</div>
+          <span class="age-group">Teens</span>
+        </li>
+      </ul>
+
+      <!-- Browse by Age -->
+      <h2 class="section-label">Browse by Specific Age Group</h2>
+      <div class="categories-row">
+        <button class="category-btn">Kids</button>
+        <button class="category-btn">Teens</button>
+        <button class="category-btn">Young Adults</button>
+        <button class="category-btn">Adults</button>
+        <button class="category-btn">Seniors</button>
+      </div>
+
+      <!-- List View -->
+      <div class="words-list">
+        <div class="word-item" data-age="teens">
+          <div class="word-info">
+            <div class="word-title">Snaking</div>
+            <div class="word-meaning">Going behind someone’s back</div>
+            <span class="age-group">Teens</span>
+          </div>
+        </div>
+        <div class="word-item clickable" data-age="teens">
+          <div class="word-info">
+            <div class="word-title">Tuff</div>
+            <div class="word-meaning">Used to call something cool</div>
+            <span class="age-group">Teens</span>
+          </div>
+        </div>
+        <div class="word-item" data-age="seniors">
+          <div class="word-info">
+            <div class="word-title">Whippersnapper</div>
+            <div class="word-meaning">Someone that’s young and overconfident</div>
+            <span class="age-group">Seniors</span>
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align:center; color:#666; margin-top:60px; font-size:0.85em;">Don’t see your word? <a href="suggestpage.html" style="color:#007bff; text-decoration:none;">Suggest it here.</a></p>
+    </div>
+
+    <script>
+      const slangWords = ["lit", "tuff", "fire"];
+      const searchBar = document.getElementById("search-bar");
+      const suggestions = document.getElementById("suggestions");
+      const categoryButtons = document.querySelectorAll(".category-btn");
+      const ageGroups = { Kids: "kids", Teens: "teens", "Young Adults": "young-adults", Adults: "adults", Seniors: "seniors" };
+
+      // Search & redirects
+      searchBar.addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        suggestions.innerHTML = "";
+        if (!query) { suggestions.style.display = "none"; return; }
+        const matches = slangWords.filter(w => w.startsWith(query));
+        if (matches.length) {
+          matches.forEach(match => {
+            const li = document.createElement("li");
+            li.textContent = match;
+            li.addEventListener("click", () => {
+              if (match === "fire") window.location.href = "wordPage.html";
+              else if (match === "tuff") window.location.href = "wordPagePopular.html";
+              else { searchBar.value = match; suggestions.style.display = "none"; }
+            });
+            suggestions.appendChild(li);
+          });
+        } else {
+          const li = document.createElement("li"); li.textContent = "No results"; li.style.color = "#666"; suggestions.appendChild(li);
+        }
+        suggestions.style.display = "block";
+      });
+
+      searchBar.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          const val = searchBar.value.toLowerCase();
+          if (val === "fire") window.location.href = "wordPage.html";
+          else if (val === "tuff") window.location.href = "wordPagePopular.html";
+        }
+      });
+
+      document.addEventListener("click", e => { if (e.target !== searchBar) suggestions.style.display = "none"; });
+
+      // Popular-card navigation
+      document.querySelectorAll('.popular-words li').forEach(li => li.addEventListener('click', () => {
+        const txt = li.querySelector('.word-title').textContent.toLowerCase();
+        if (txt.startsWith('fire')) window.location.href = 'wordPage.html';
+        else if (txt.startsWith('tuff')) window.location.href = 'wordPagePopular.html';
+      }));
+
+      // Filter-by-age functionality
+      function filterWords(age) {
+        const list = document.querySelector('.words-list');
+        let found = false;
+        list.querySelectorAll('.word-item').forEach(item => {
+          if (item.dataset.age === age) { item.style.display = 'flex'; found = true; }
+          else item.style.display = 'none';
+        });
+        if (!found) {
+          const msg = document.createElement('div'); msg.className = 'no-words-message';
+          msg.textContent = 'No slang words found for this age group. Be the first to suggest one!';
+          list.appendChild(msg);
+        }
+      }
+      categoryButtons.forEach(btn => btn.addEventListener('click', () => {
+        categoryButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelector('.no-words-message')?.remove();
+        filterWords(ageGroups[btn.textContent]);
+      }));
+
+      // Initialize with Teens active
+      categoryButtons[1].click();
+    </script>
+  </body>
+</html>
