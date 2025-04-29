@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Slang Dictionary – Word Detail</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 5px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        padding-top: 60px; /* space for back button */
+      }
+      /* Back Button */
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 30px;
+        border: none;
+      }
+      .back-button:hover {
+        background-color: #0056b3;
+      }
+      /* Alternative Definition Buttons */
+      .alternative-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-bottom: 5px;
+      }
+      .alternative-button {
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .alternative-button:disabled {
+        background-color: #a0c0e5;
+        cursor: not-allowed;
+      }
+      .alternative-button:hover:enabled {
+        background-color: #0056b3;
+      }
+      .icon {
+        font-size: 24px;
+      }
+      /* Word Header */
+      #detail-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .word-title {
+        font-size: 5em;
+        font-weight: bold;
+        color: black;
+        margin: 0;
+      }
+      .age-group {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        vertical-align: middle;
+      }
+      /* Definition */
+      .word-definition p {
+        font-size: 2.5em;
+        color: #007bff;
+        font-weight: bold;
+        margin: 1px 0 20px;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      }
+      /* Accuracy Section */
+      .accuracy-container {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        font-size: 0.9em;
+        gap: 10px;
+      }
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+      }
+      .accuracy-icon {
+        width: 16px;
+        height: 16px;
+        background-color: #007bff;
+        border-radius: 50%;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: help;
+      }
+      .tooltip-text {
+        visibility: hidden;
+        background-color: #333;
+        color: #fff;
+        font-size: 0.8em;
+        text-align: left;
+        border-radius: 5px;
+        padding: 8px;
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 250px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1;
+      }
+      .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+      }
+      .tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+      .accuracy-percentage {
+        color: #333;
+      }
+      /* Rating & Comment Section */
+      .rating-comment-section {
+        margin-top: 30px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 10px;
+      }
+      .rating-title,
+      .comment-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      .rating-label {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px; /* space between each column */
+    }
+
+    .rating-checkboxes {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-right: 20px;  /* ← pushes the radios left, away from the % */
+    }
+
+      .rating-accuracy {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .rating-accuracy .accuracy-icon {
+        width: 10px;
+        height: 10px;
+      }
+      .comment-box {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        outline: none;
+      }
+      .submit-comment-btn {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .submit-comment-btn:hover {
+        background-color: #0056b3;
+      }
+      /* Sample Comments */
+      .comments-header {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+      .sample-comments {
+        margin-top: 30px;
+      }
+      .sample-comment {
+        background-color: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+      }
+      .comment-text {
+        font-size: 1.2em;
+        color: black;
+        margin-bottom: 15px;
+      }
+      .vote-radio {
+        display: none;
+      }
+      .vote-button {
+        padding: 5px 12px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+      .vote-button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+      }
+      .vote-radio:checked + .vote-button {
+        background-color: #004080;
+      }
+      /* Blue letter grade (if needed) */
+      .letter-grade {
+        color: #007bff;
+        font-weight: bold;
+      }
+    </style>
+
+    <!-- populate after DOM loads -->
+    <script src="detail.js" defer></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <button class="back-button" onclick="history.back()">←</button>
+
+      <div class="alternative-buttons">
+        <button class="alternative-button" disabled>
+          <span class="icon">☰</span> Additional Definitions
+        </button>
+        <button class="alternative-button">
+          <span class="icon">+</span> Suggest Different Definition
+        </button>
+      </div>
+
+      <div id="detail-header">
+        <span id="detail-title" class="word-title"></span>
+        <span id="detail-age" class="age-group"></span>
+      </div>
+
+      <div class="word-definition">
+        <p id="detail-definition"></p>
+      </div>
+
+      <div class="accuracy-container">
+        <div class="tooltip-container">
+          <div class="accuracy-icon">i</div>
+          <div class="tooltip-text" id="detail-tooltip"></div>
+        </div>
+        <span id="detail-accuracy" class="accuracy-percentage"></span>
+      </div>
+
+      <div class="rating-comment-section">
+        <div class="rating-title">Rate This Definition:</div>
+
+        <div class="rating-label">
+          Did this definition help you understand your kids in conversation?
+          <div class="rating-checkboxes">
+            <input type="radio" id="rating1-yes" name="understand" />
+            <label for="rating1-yes">Yes</label>
+            <input type="radio" id="rating1-no" name="understand" />
+            <label for="rating1-no">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span id="metric1-percent"></span>
+          </div>
+        </div>
+
+        <div class="rating-label">
+          Were you able to use this slang term in conversation?
+          <div class="rating-checkboxes">
+            <input type="radio" id="rating2-yes" name="used" />
+            <label for="rating2-yes">Yes</label>
+            <input type="radio" id="rating2-no" name="used" />
+            <label for="rating2-no">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span id="metric2-percent"></span>
+          </div>
+        </div>
+
+        <div class="rating-label">
+          Is the age group tag correct for this slang term?
+          <div class="rating-checkboxes">
+            <input type="radio" id="rating3-yes" name="agegroup" />
+            <label for="rating3-yes">Yes</label>
+            <input type="radio" id="rating3-no" name="agegroup" />
+            <label for="rating3-no">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span id="metric3-percent"></span>
+          </div>
+        </div>
+
+        <div class="comment-title">Leave a Comment:</div>
+        <textarea class="comment-box" placeholder="Write your comment here..."></textarea>
+        <button class="submit-comment-btn">Submit Comment</button>
+      </div>
+
+      <div class="comments-header">Comments</div>
+      <div class="sample-comments" id="sample-comments"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slang Dictionary - Word Detail</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 5px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Back Button */
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 30px;
+      }
+
+      .back-button:hover {
+        background-color: #0056b3;
+      }
+
+      .word-title {
+        font-size: 5em;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 1px;
+      }
+
+      .age-group {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        vertical-align: middle;
+        margin-left: 10px;
+      }
+
+      /* Word Definition */
+      .word-definition {
+        font-size: 2.5em;
+        color: #007bff;
+        font-weight: bold;
+        margin-bottom: 1px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .accuracy-container {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        font-size: 0.9em;
+      }
+
+      .accuracy-icon {
+        width: 16px;
+        height: 16px;
+        background-color: #007bff;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .accuracy-percentage {
+        color: #333;
+      }
+
+      /* Rating and Comment Section */
+      .rating-comment-section {
+        margin-top: 30px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+      }
+
+      .rating-title,
+      .comment-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .rating-label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+        color: #212121;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .rating-checkboxes {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .rating-checkboxes input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .rating-checkboxes input[type="checkbox"]:checked {
+        background-color: #007bff;
+      }
+
+      .rating-accuracy {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .rating-accuracy .accuracy-icon {
+        width: 10px;
+        height: 10px;
+      }
+
+      .comment-box {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        outline: none;
+        border: 2px solid black;
+      }
+
+      .submit-comment-btn {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .submit-comment-btn:hover {
+        background-color: #0056b3;
+      }
+
+      /* Sample Comments Section */
+      .comments-header {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .sample-comments {
+        margin-top: 30px;
+      }
+
+      .sample-comment {
+        background-color: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .comment-text {
+        font-size: 1.2em;
+        color: black;
+        margin-bottom: 15px;
+      }
+
+      .comment-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .comment-actions button {
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9em;
+      }
+
+      .comment-actions button:hover {
+        background-color: #0056b3;
+      }
+
+      .alternative-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 10px; 
+        margin-bottom: 5px;
+      }
+
+      .alternative-button {
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .alternative-button:hover {
+        background-color: #0056b3;
+        
+      }
+
+      .alternative-button:disabled {
+        background-color: #a0c0e5;
+        cursor: not-allowed;
+      }
+
+      .alternative-button .icon {
+        font-size: 22px;
+      }
+
+      .icon {
+        font-size: 24px;
+      }
+
+      .rating-checkboxes input[type="checkbox"]:not(:first-child) {
+        margin-left: 10px;
+      }
+
+      .vote-button {
+        padding: 5px 12px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+
+      .vote-button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+      }
+
+      .vote-radio:checked + .vote-button {
+        background-color: #004080; 
+      }
+
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      .accuracy-icon {
+        width: 20px;
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 50%;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: help;
+      }
+
+      /* Tooltip text */
+      .tooltip-text {
+        visibility: hidden;
+        background-color: #333;
+        color: #fff;
+        font-size: 0.8em;
+        text-align: left;
+        border-radius: 5px;
+        padding: 8px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; 
+        left: 50%;
+        transform: translateX(-50%);
+        width: 250px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%; 
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+      }
+
+      /* Show the tooltip on hover */
+      .tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Back Button -->
+      <button class="back-button">&#8592;</button>
+
+      <!-- Alternative Definitions and Add Alternative Definition Buttons -->
+      <div class="alternative-buttons">
+        <button class="alternative-button" disabled>
+          <span class="icon">☰</span> Additional Definitions
+        </button>
+        <button class="alternative-button">
+          <span class="icon">+</span> Suggest Different Definition
+        </button>
+      </div>
+
+      <!-- Word and Age Group Tag -->
+      <div>
+        <span class="word-title">Fire</span>
+        <span class="age-group">Teen</span>
+      </div>
+
+      <!-- Word Definition -->
+      <div class="word-definition">
+        <p>Something that is great or awesome</p>
+      </div>
+
+      <!-- Accuracy Section -->
+      <div class="accuracy-container">
+        <div class="accuracy-container">
+          <div class="tooltip-container">
+            <div class="accuracy-icon">?</div>
+            <div class="tooltip-text">
+              Accuracy is calculated as an average of the 3 rating questions seen below.
+            </div>
+          </div>
+          <span class="accuracy-percentage">Definition Accuracy: 85%</span>
+        </div>
+      </div>
+
+      <!-- Rating and Comment Section -->
+      <div class="rating-comment-section">
+        <div class="rating-title">Rate This Definition:</div>
+
+        <!-- First Rating Question -->
+        <div class="rating-label">
+          Did this definition help you understand your kids in conversation?
+          <div class="rating-checkboxes">
+            <input type="radio" id="rating1-yes" name="understand" />
+            <label for="rating1-yes">Yes</label>
+            <input type="radio" id="rating1-no" name="understand" />
+            <label for="rating1-no">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span>90% Say Yes</span>
+          </div>
+        </div>
+
+        <!-- Second Rating Question -->
+        <div class="rating-label">
+          Were you able to use this slang term in conversation? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          <div class="rating-checkboxes">
+            <input type="radio" id="rating2-yes" name="used" />
+            <label for="rating2-yes">Yes</label>
+            <input type="radio" id="rating2-no" name="used" />
+            <label for="rating2-no">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span>85% Say Yes</span>
+          </div>
+        </div>
+
+        <!-- Third Rating Question -->
+        <div class="rating-label">
+          Is the age group tag correct for this slang term? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          <div class="rating-checkboxes">
+            <input type="radio" id="rating3-yes" name="agegroup" />
+            <label for="rating3-yes">Yes</label>
+            <input type="radio" id="rating3-no" name="agegroup" />
+            <label for="rating3-no">No</label>
+          </div>
+          <div class="rating-accuracy">
+            <div class="accuracy-icon"></div>
+            <span>80% Say Yes</span>
+          </div>
+        </div>
+
+        <div class="comment-title">Leave a Comment:</div>
+        <textarea class="comment-box" placeholder="Write your comment here..."></textarea>
+        <button class="submit-comment-btn">Submit Comment</button>
+      </div>
+
+      <!-- Comments Header -->
+      <div class="comments-header">Comments (3)</div>
+
+      <!-- Sample Comments -->
+      <div class="sample-comments">
+        <div class="sample-comment">
+          <div class="comment-text">
+            This term was super helpful! I can finally understand what my teenager means when they say "Fire."
+          </div>
+          <div class="comment-actions">
+            <input type="radio" name="vote1" id="vote1-up" class="vote-radio" hidden />
+            <label for="vote1-up" class="vote-button">👍</label>
+          
+            <input type="radio" name="vote1" id="vote1-down" class="vote-radio" hidden />
+            <label for="vote1-down" class="vote-button">👎</label>
+          </div>
+        </div>
+
+        <div class="sample-comment">
+          <div class="comment-text">
+            I never knew "Fire" meant something positive! Thanks for the definition, I’ll be using it now.
+          </div>
+          <div class="comment-actions">
+            <input type="radio" name="vote2" id="vote2-up" class="vote-radio" hidden />
+            <label for="vote2-up" class="vote-button">👍</label>
+          
+            <input type="radio" name="vote2" id="vote2-down" class="vote-radio" hidden />
+            <label for="vote2-down" class="vote-button">👎</label>
+          </div>
+        </div>
+
+        <div class="sample-comment">
+          <div class="comment-text">
+            Good explanation. However, it would be great to get more examples of how it’s used in sentences.
+          </div>
+          <div class="comment-actions">
+            <input type="radio" name="vote3" id="vote3-up" class="vote-radio" hidden />
+            <label for="vote3-up" class="vote-button">👍</label>
+          
+            <input type="radio" name="vote3" id="vote3-down" class="vote-radio" hidden />
+            <label for="vote3-down" class="vote-button">👎</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

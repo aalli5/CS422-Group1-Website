@@ -1,0 +1,154 @@
+/* Base styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Center container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Header layout: flexible height */
+  .header {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 20px 0;
+  }
+  
+  /* Back button: flush to far left */
+  .back-button {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .back-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Logo/title: shifted left to accommodate button */
+  .title {
+    position: absolute;
+    left: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
+    font-weight: bold;
+    font-size: 2em;
+    margin: 0;
+  }
+  .title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  /* Search bar: centered and widened */
+  .search-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  #search-bar {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #888;
+    border-radius: 25px;
+    outline: none;
+  }
+  
+  /* Suggestions dropdown */
+  #suggestions {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+  }
+  #suggestions li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  #suggestions li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Page title */
+  .page-title {
+    margin: 20px 0;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Input boxes */
+  .input-box {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+  }
+  input,
+  textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  /* Submit button */
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 20px auto;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  
