@@ -242,14 +242,18 @@
 
       <!-- Search Bar -->
       <div class="search-container">
-        <input
-          type="text"
-          id="search-bar"
-          placeholder="Search for words..."
-          autocomplete="off"
-        />
-        <ul id="suggestions"></ul>
+        <form action="searchresults.html" method="get">
+          <input
+            type="text"
+            id="search-bar"
+            name="q"
+            placeholder="Search for words..."
+            autocomplete="off"
+          />
+          <ul id="suggestions"></ul>
+        </form>
       </div>
+      
 
       <!-- Popular Words -->
       <h2 class="section-label">Popular Slangs!</h2>

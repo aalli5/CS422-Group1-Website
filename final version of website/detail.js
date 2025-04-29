@@ -100,6 +100,21 @@ const words = [
     document.getElementById('metric3-percent').textContent =
       `${word.metrics.ageTagAccuracy}% Say Yes`;
   
+    // Show the Submit button once all three answered
+    function checkSubmitEnabled() {
+      const has1 = !!document.querySelector('input[name="understand"]:checked');
+      const has2 = !!document.querySelector('input[name="used"]:checked');
+      const has3 = !!document.querySelector('input[name="agegroup"]:checked');
+      document.getElementById('submit-rating-btn').style.display =
+        (has1 && has2 && has3) ? 'inline-block' : 'none';
+    }
+  
+    ['understand','used','agegroup'].forEach(group => {
+      document.querySelectorAll(`input[name="${group}"]`)
+        .forEach(radio => radio.addEventListener('change', checkSubmitEnabled));
+    });
+    checkSubmitEnabled();
+  
     // Sample comments
     const commentsContainer = document.getElementById('sample-comments');
     word.comments.forEach((c,i) => {
@@ -116,5 +131,12 @@ const words = [
       `;
       commentsContainer.appendChild(block);
     });
+  
+    // ** New: on submit, replace rating section with confirmation **
+    document.getElementById('submit-rating-btn')
+      .addEventListener('click', () => {
+        const section = document.querySelector('.rating-comment-section');
+        section.innerHTML = '<p style="font-size:1.2em;font-weight:bold;">Rating submitted</p>';
+      });
   }
   

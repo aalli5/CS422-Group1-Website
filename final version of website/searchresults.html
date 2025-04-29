@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Slang Dictionary – Search Results</title>
+    <style>
+      /* ----- Global + Container ----- */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 5px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        padding-top: 60px; /* space for logo + search */
+      }
+
+      /* ----- Header (logo + search) ----- */
+      .title {
+        color: black;
+        text-align: left;
+        margin-left: 20px;
+        font-weight: bold;
+        font-size: 2em;
+      }
+      .title a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .search-container {
+        position: relative;
+        text-align: center;
+        margin: 20px 0;
+      }
+      #search-bar {
+        width: 60%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #888;
+        border-radius: 25px;
+        outline: none;
+      }
+      #suggestions {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        max-width: 400px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: none;
+        list-style: none;
+        margin: 0; padding: 0;
+        z-index: 1000;
+      }
+      #suggestions li {
+        padding: 8px; cursor: pointer;
+      }
+      #suggestions li:hover {
+        background: #f0f0f0;
+      }
+
+      /* ----- Search Results Heading ----- */
+      .section-label {
+        text-align: center;
+        color: #333;
+        margin: 40px 0 20px;
+      }
+
+      /* ----- Results List ----- */
+      .words-list {
+        margin: 0 auto 40px;
+        width: 90%;
+        list-style: none;
+        padding: 0;
+      }
+      .word-item {
+        background: white;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      .word-item a {
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #333;
+        text-decoration: none;
+      }
+      .word-item a:hover {
+        text-decoration: underline;
+      }
+
+      /* ----- Suggest Link ----- */
+      .suggest-link {
+        text-align: center;
+        font-size: 0.85em;
+        color: #666;
+        margin-bottom: 40px;
+      }
+      .suggest-link a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      .suggest-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Logo + Search -->
+      <h1 class="title"><a href="index.html">Slang Dictionary</a></h1>
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-bar"
+          placeholder="Search for words..."
+          autocomplete="off"
+        />
+        <ul id="suggestions"></ul>
+      </div>
+
+      <!-- Search Results Heading -->
+      <h2 class="section-label">
+        Search Results for “<span id="search-query"></span>”
+      </h2>
+
+      <!-- Results -->
+      <ul class="words-list" id="results-list"></ul>
+
+      <!-- Suggest if no match -->
+      <p class="suggest-link">
+        Don't see your word?
+        <a href="suggestpage.html">Suggest it here.</a>
+      </p>
+    </div>
+
+    <script>
+      // 1) Helper: Get ?q=… from URL
+      function getQueryParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name) || '';
+      }
+
+      // 2) Setup live suggestions & ENTER → searchresults.html?q=…
+      (function() {
+        const slangWords = ['Tuff','Fire','Drip','Snaking','Whippersnapper'];
+        const searchBar = document.getElementById('search-bar');
+        const suggestions = document.getElementById('suggestions');
+
+        // pre-fill search box
+        const q = getQueryParam('q');
+        searchBar.value = q;
+        document.getElementById('search-query').textContent = q;
+
+        // dropdown suggestions
+        searchBar.addEventListener('input', () => {
+          const val = searchBar.value.toLowerCase();
+          suggestions.innerHTML = '';
+          if (!val) return suggestions.style.display = 'none';
+          const matches = slangWords.filter(w => w.toLowerCase().startsWith(val));
+          matches.forEach(w => {
+            const li = document.createElement('li');
+            li.textContent = w;
+            li.onclick = () => {
+              window.location.href = `searchresults.html?q=${encodeURIComponent(w)}`;
+            };
+            suggestions.appendChild(li);
+          });
+          if (matches.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'No results';
+            li.style.color = '#666';
+            suggestions.appendChild(li);
+          }
+          suggestions.style.display = 'block';
+        });
+
+        // hide dropdown on outside click
+        document.addEventListener('click', e => {
+          if (e.target !== searchBar) suggestions.style.display = 'none';
+        });
+
+        // ENTER key → go to results
+        searchBar.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = searchBar.value.trim();
+            if (val) {
+              window.location.href = `searchresults.html?q=${encodeURIComponent(val)}`;
+            }
+          }
+        });
+      })();
+
+      // 3) Render matching results
+      (function() {
+        // your data model
+        const data = [
+          { word: 'Tuff', url: 'word.html?word=Tuff' },
+          { word: 'Fire', url: 'word.html?word=Fire' },
+          { word: 'Drip', url: 'word.html?word=Drip' },
+          { word: 'Snaking', url: 'word.html?word=Snaking' },
+          { word: 'Whippersnapper', url: 'word.html?word=Whippersnapper' }
+        ];
+
+        const q = getQueryParam('q').toLowerCase();
+        const results = data.filter(item =>
+          item.word.toLowerCase().includes(q)
+        );
+
+        const list = document.getElementById('results-list');
+        if (results.length) {
+          results.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'word-item';
+            li.innerHTML = `<a href="${item.url}">${item.word}</a>`;
+            list.appendChild(li);
+          });
+        } else {
+          const li = document.createElement('li');
+          li.className = 'word-item';
+          li.textContent = 'No matching words found.';
+          list.appendChild(li);
+        }
+      })();
+    </script>
+  </body>
+</html>

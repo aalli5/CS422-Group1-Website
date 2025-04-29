@@ -152,14 +152,18 @@
     <div class="container">
       <h1 class="title"><a href="index.html">Slang Dictionary</a></h1>
       <div class="search-container">
-        <input
-          type="text"
-          id="search-bar"
-          placeholder="Search for words..."
-          autocomplete="off"
-        />
-        <ul id="suggestions"></ul>
+        <form action="searchresults.html" method="get">
+          <input
+            type="text"
+            id="search-bar"
+            name="q"
+            placeholder="Search for words..."
+            autocomplete="off"
+          />
+          <ul id="suggestions"></ul>
+        </form>
       </div>
+      
 
       <h1 class="page-title">Suggest a New Word</h1>
 

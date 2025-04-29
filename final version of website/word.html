@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Slang Dictionary – Word Detail</title>
     <style>
+      /* ----- Global ----- */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -15,12 +16,64 @@
         max-width: 1200px;
         margin: 0 auto;
         position: relative;
-        padding-top: 60px; /* space for back button */
+        padding-top: 60px; /* space for logo+search */
       }
-      /* Back Button */
+
+      /* ----- Header (logo + search) ----- */
+      .title {
+        color: black;
+        text-align: left;
+        margin-left: 20px;
+        font-weight: bold;
+        font-size: 2em;
+      }
+      .title a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .search-container {
+        position: relative;
+        text-align: center;
+        margin: 20px 0;
+      }
+      #search-bar {
+        width: 60%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #888;
+        border-radius: 25px;
+        outline: none;
+      }
+      #suggestions {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        max-width: 400px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        z-index: 1000;
+      }
+      #suggestions li {
+        padding: 8px;
+        cursor: pointer;
+      }
+      #suggestions li:hover {
+        background-color: #f0f0f0;
+      }
+
+      /* ----- Back button ----- */
       .back-button {
         position: absolute;
-        top: 20px;
+        top: 140px;    /* just below search bar */
         left: 20px;
         background-color: #007bff;
         color: white;
@@ -28,12 +81,17 @@
         border-radius: 50%;
         cursor: pointer;
         font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: none;
+        text-decoration: none;
       }
       .back-button:hover {
         background-color: #0056b3;
       }
-      /* Alternative Definition Buttons */
+
+      /* ----- Additional Definitions ----- */
       .alternative-buttons {
         display: flex;
         justify-content: flex-end;
@@ -57,13 +115,11 @@
         background-color: #a0c0e5;
         cursor: not-allowed;
       }
-      .alternative-button:hover:enabled {
-        background-color: #0056b3;
-      }
       .icon {
         font-size: 24px;
       }
-      /* Word Header */
+
+      /* ----- Word Header ----- */
       #detail-header {
         display: flex;
         align-items: center;
@@ -82,9 +138,9 @@
         padding: 4px 8px;
         border-radius: 5px;
         font-size: 0.9em;
-        vertical-align: middle;
       }
-      /* Definition */
+
+      /* ----- Definition ----- */
       .word-definition p {
         font-size: 2.5em;
         color: #007bff;
@@ -92,7 +148,8 @@
         margin: 1px 0 20px;
         text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
       }
-      /* Accuracy Section */
+
+      /* ----- Accuracy Tooltip ----- */
       .accuracy-container {
         display: flex;
         align-items: center;
@@ -133,6 +190,7 @@
         opacity: 0;
         transition: opacity 0.3s;
         z-index: 1;
+        white-space: pre-line;
       }
       .tooltip-text::after {
         content: "";
@@ -151,10 +209,11 @@
       .accuracy-percentage {
         color: #333;
       }
-      /* Rating & Comment Section */
+
+      /* ----- Rating & Comment Section ----- */
       .rating-comment-section {
         margin-top: 30px;
-        background-color: white;
+        background: white;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -172,16 +231,14 @@
         grid-template-columns: 1fr auto auto;
         align-items: center;
         margin-bottom: 15px;
-        gap: 10px; /* space between each column */
-    }
-
-    .rating-checkboxes {
+        gap: 10px;
+      }
+      .rating-checkboxes {
         display: flex;
         align-items: center;
         gap: 15px;
-        margin-right: 20px;  /* ← pushes the radios left, away from the % */
-    }
-
+        margin-right: 20px;
+      }
       .rating-accuracy {
         display: flex;
         align-items: center;
@@ -200,19 +257,22 @@
         margin-bottom: 20px;
         outline: none;
       }
-      .submit-comment-btn {
+      #submit-rating-btn {
+        display: none;
         padding: 12px 25px;
-        background-color: #007bff;
+        background: #007bff;
         color: white;
         border: none;
         border-radius: 20px;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background 0.3s;
+        margin-top: 10px;
       }
-      .submit-comment-btn:hover {
-        background-color: #0056b3;
+      #submit-rating-btn:hover {
+        background: #0056b3;
       }
-      /* Sample Comments */
+
+      /* ----- Sample Comments ----- */
       .comments-header {
         font-size: 1.5em;
         font-weight: bold;
@@ -223,7 +283,7 @@
         margin-top: 30px;
       }
       .sample-comment {
-        background-color: white;
+        background: white;
         padding: 15px;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -239,53 +299,109 @@
       }
       .vote-button {
         padding: 5px 12px;
-        background-color: #007bff;
+        background: #007bff;
         color: white;
         border-radius: 20px;
         cursor: pointer;
         font-size: 1em;
-        transition: background-color 0.3s, transform 0.2s;
+        transition: background 0.3s, transform 0.2s;
       }
       .vote-button:hover {
-        background-color: #0056b3;
+        background: #0056b3;
         transform: scale(1.05);
       }
       .vote-radio:checked + .vote-button {
-        background-color: #004080;
+        background: #004080;
       }
-      /* Blue letter grade (if needed) */
-      .letter-grade {
-        color: #007bff;
+
+      /* ----- Submit a New Definition ----- */
+      #submit-definition-container {
+        margin: 0 20px 40px;
+      }
+      .section-title {
+        font-size: 1.5em;
         font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .submit-definition-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      #new-definition-box {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        outline: none;
+      }
+      #submit-definition-btn {
+        padding: 12px 25px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        transition: opacity 0.3s, background 0.3s;
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      #submit-definition-btn:enabled {
+        opacity: 1;
+        cursor: pointer;
+      }
+      #submit-definition-confirm {
+        font-size: 1.2em;
+        color: #333;
+        margin: 20px;
+        display: none;
       }
     </style>
-
-    <!-- populate after DOM loads -->
     <script src="detail.js" defer></script>
   </head>
-
   <body>
     <div class="container">
+      <!-- Logo + Search -->
+      <h1 class="title"><a href="index.html">Slang Dictionary</a></h1>
+      <div class="search-container">
+        <form action="searchresults.html" method="get">
+          <input
+            type="text"
+            id="search-bar"
+            name="q"
+            placeholder="Search for words..."
+            autocomplete="off"
+          />
+          <ul id="suggestions"></ul>
+        </form>
+      </div>
+      
+
+      <!-- Back Button -->
       <button class="back-button" onclick="history.back()">←</button>
 
+      <!-- Additional Definitions -->
       <div class="alternative-buttons">
         <button class="alternative-button" disabled>
           <span class="icon">☰</span> Additional Definitions
         </button>
-        <button class="alternative-button">
-          <span class="icon">+</span> Suggest Different Definition
-        </button>
       </div>
 
+      <!-- Word + Age -->
       <div id="detail-header">
         <span id="detail-title" class="word-title"></span>
         <span id="detail-age" class="age-group"></span>
       </div>
 
+      <!-- Definition -->
       <div class="word-definition">
         <p id="detail-definition"></p>
       </div>
 
+      <!-- Accuracy -->
       <div class="accuracy-container">
         <div class="tooltip-container">
           <div class="accuracy-icon">i</div>
@@ -294,6 +410,7 @@
         <span id="detail-accuracy" class="accuracy-percentage"></span>
       </div>
 
+      <!-- Rating + Comment -->
       <div class="rating-comment-section">
         <div class="rating-title">Rate This Definition:</div>
 
@@ -341,11 +458,75 @@
 
         <div class="comment-title">Leave a Comment:</div>
         <textarea class="comment-box" placeholder="Write your comment here..."></textarea>
-        <button class="submit-comment-btn">Submit Comment</button>
+        <button id="submit-rating-btn">Submit Rating</button>
       </div>
 
+      <!-- Sample Comments -->
       <div class="comments-header">Comments</div>
       <div class="sample-comments" id="sample-comments"></div>
+
+      <!-- Submit a New Definition -->
+      <div id="submit-definition-container">
+        <div class="section-title">Submit a New Definition</div>
+        <div class="submit-definition-section">
+          <textarea
+            id="new-definition-box"
+            placeholder="Enter your alternative definition here..."
+          ></textarea>
+          <button id="submit-definition-btn" disabled>
+            Submit for Review
+          </button>
+        </div>
+      </div>
+      <div id="submit-definition-confirm">
+        New definition submitted for review
+      </div>
     </div>
+
+    <script src="detail.js" defer></script>
+    <script>
+      // ----- search suggestions -----
+      const slangWords = ['Tuff','Fire','Drip','Snaking','Whippersnapper'];
+      const searchBar = document.getElementById('search-bar');
+      const suggestions = document.getElementById('suggestions');
+      searchBar.addEventListener('input', () => {
+        const q = searchBar.value.toLowerCase();
+        suggestions.innerHTML = '';
+        if (!q) return suggestions.style.display='none';
+        const matches = slangWords.filter(w => w.toLowerCase().startsWith(q));
+        matches.length ? matches.forEach(m => {
+          const li = document.createElement('li');
+          li.textContent = m;
+          li.onclick = () => {
+            searchBar.value = m;
+            suggestions.style.display='none';
+          };
+          suggestions.appendChild(li);
+        }) : (() => {
+          const li = document.createElement('li');
+          li.textContent = 'No results';
+          li.style.color = '#666';
+          suggestions.appendChild(li);
+        })();
+        suggestions.style.display='block';
+      });
+      document.addEventListener('click', e => {
+        if (e.target !== searchBar) suggestions.style.display='none';
+      });
+
+      // ----- enable submit-definition button -----
+      const newDefBox = document.getElementById('new-definition-box');
+      const submitDefBtn = document.getElementById('submit-definition-btn');
+      newDefBox.addEventListener('input', () => {
+        submitDefBtn.disabled = !newDefBox.value.trim();
+      });
+
+      // ----- handle submit-definition click -----
+      submitDefBtn.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('submit-definition-container').style.display = 'none';
+        document.getElementById('submit-definition-confirm').style.display = 'block';
+      });
+    </script>
   </body>
 </html>
